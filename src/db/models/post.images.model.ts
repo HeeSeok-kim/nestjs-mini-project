@@ -7,43 +7,49 @@ import {
   CreatedAt,
   UpdatedAt,
   BelongsTo,
-  AllowNull,
+  HasMany,
   AutoIncrement,
+  AllowNull,
 } from 'sequelize-typescript';
-import { Users } from './users.model';
 import { Posts } from './posts.model';
+
 @Table({
-  modelName: 'Likes',
-  tableName: 'likes',
+  modelName: 'PostImages',
+  tableName: 'post_images',
   freezeTableName: false,
   timestamps: true,
 })
-export class Likes extends Model {
+export class PostImages extends Model {
   @BelongsTo(() => Posts)
   posts: Posts;
 
-  @BelongsTo(() => Users)
-  users: Users;
-
   @PrimaryKey
-  @AllowNull(false)
   @AutoIncrement
-  @Column
-  like_id: number;
-
-  @ForeignKey(() => Users)
   @AllowNull(false)
   @Column
-  user_id: number;
+  post_image_id: number;
 
   @ForeignKey(() => Posts)
   @AllowNull(false)
   @Column
-  feed_id: number;
+  post_id: number;
+
+  @AllowNull(false)
+  @Column
+  post_image_origin_name: string;
+
+  @AllowNull(false)
+  @Column
+  post_image_new_name: string;
+
+  @AllowNull(false)
+  @Column
+  post_image_type: string;
+
+  @AllowNull(false)
+  @Column
+  post_image_size: number;
 
   @CreatedAt
   created_at: Date;
-
-  @UpdatedAt
-  updated_at: Date;
 }

@@ -11,21 +11,21 @@ import {
   BelongsTo,
   ForeignKey,
 } from 'sequelize-typescript';
-import { Feed } from './post';
-import { User } from './user.models';
+import { Posts } from './posts.model';
+import { Users } from './users.model';
 
 @Table({
-  modelName: 'Pick',
+  modelName: 'Picks',
   tableName: 'picks',
   freezeTableName: false,
   timestamps: true,
 })
-export class Pick extends Model {
-  @BelongsTo(() => User)
-  user: User;
+export class Picks extends Model {
+  @BelongsTo(() => Users)
+  users: Users;
 
-  @BelongsTo(() => Feed)
-  feed: Feed;
+  @BelongsTo(() => Posts)
+  posts: Posts;
 
   @PrimaryKey
   @AllowNull(false)
@@ -34,15 +34,15 @@ export class Pick extends Model {
   @Column
   pick_id: number;
 
-  @ForeignKey(() => User)
+  @ForeignKey(() => Users)
   @AllowNull(false)
   @Column
   user_id: number;
 
-  @ForeignKey(() => Feed)
+  @ForeignKey(() => Posts)
   @AllowNull(false)
   @Column
-  feed_id: number;
+  post_id: number;
 
   @CreatedAt
   created_at: Date;

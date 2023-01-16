@@ -10,23 +10,20 @@ import {
   AutoIncrement,
   AllowNull,
 } from 'sequelize-typescript';
-import { User } from './user.models';
-import { Feed } from './post';
+import { Users } from './users.model';
+import { Posts } from './posts.model';
 @Table({
-  modelName: 'Comment',
+  modelName: 'Comments',
   tableName: 'comments',
   freezeTableName: false,
   timestamps: true,
 })
-export class Comment extends Model {
-  @BelongsTo(() => User)
-  user: User;
+export class Comments extends Model {
+  @BelongsTo(() => Users)
+  users: Users;
 
-  @BelongsTo(() => Feed)
-  feed: Feed;
-
-  @BelongsTo(() => Comment)
-  comment: Comment;
+  @BelongsTo(() => Posts)
+  posts: Posts;
 
   @PrimaryKey
   @AutoIncrement
@@ -34,20 +31,19 @@ export class Comment extends Model {
   @Column
   comment_id: number;
 
-  @ForeignKey(() => Comment)
-  @AllowNull(false)
-  @Column
-  parent_id: number;
-
-  @ForeignKey(() => User)
+  @ForeignKey(() => Users)
   @AllowNull(false)
   @Column
   user_id: number;
 
-  @ForeignKey(() => Feed)
+  @ForeignKey(() => Posts)
   @AllowNull(false)
   @Column
-  feed_id: number;
+  post_id: number;
+
+  @AllowNull(false)
+  @Column
+  depth: boolean;
 
   @CreatedAt
   created_at: Date;

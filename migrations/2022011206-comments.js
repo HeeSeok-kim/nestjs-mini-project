@@ -12,7 +12,7 @@ module.exports = {
       },
       depth: {
         allowNull: true,
-        type: Sequelize.DataTypes.INTEGER,
+        type: Sequelize.DataTypes.BOOLEAN,
       },
       user_id: {
         type: Sequelize.DataTypes.INTEGER,

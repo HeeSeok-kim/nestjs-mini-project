@@ -10,10 +10,10 @@ import {
   Unique,
   AutoIncrement,
 } from 'sequelize-typescript';
-import { Like } from './like.models';
-import { Feed } from './post';
-import { Comment } from './comment.models';
-import { Pick } from './pick.models';
+import { Likes } from './like.models';
+import { Posts } from './posts.model';
+import { Comments } from './comment.models';
+import { Picks } from './picks.model';
 
 @Table({
   modelName: 'User',
@@ -21,20 +21,18 @@ import { Pick } from './pick.models';
   freezeTableName: false,
   timestamps: true,
 })
-export class User extends Model {
-  //HasMany
+export class Users extends Model {
+  @HasMany(() => Likes)
+  likes: Likes[];
 
-  @HasMany(() => Like)
-  like: Like[];
+  @HasMany(() => Posts)
+  posts: Posts[];
 
-  @HasMany(() => Feed)
-  feed: Feed[];
+  @HasMany(() => Picks)
+  picks: Picks[];
 
-  @HasMany(() => Pick)
-  pick: Pick[];
-
-  @HasMany(() => Comment)
-  comment: Comment[];
+  @HasMany(() => Comments)
+  comments: Comments[];
 
   @PrimaryKey
   @AllowNull(false)
@@ -55,12 +53,6 @@ export class User extends Model {
   @AllowNull(false)
   @Column
   nickname: string;
-
-  @Column
-  mbti: string;
-
-  @Column
-  provider: string;
 
   @CreatedAt
   created_at: Date;
