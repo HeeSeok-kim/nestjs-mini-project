@@ -34,11 +34,6 @@ module.exports = {
         type: Sequelize.DataTypes.DATE,
         defaultValue: Sequelize.DataTypes.NOW,
       },
-      updated_at: {
-        allowNull: false,
-        type: Sequelize.DataTypes.DATE,
-        defaultValue: Sequelize.DataTypes.NOW,
-      },
     });
   },
   async down(queryInterface, Sequelize) {
