@@ -1,15 +1,24 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
+import { PostRepository } from 'src/db/repository/PostRepository';
+import { AwsS3Service } from '../../../common/util/asw.s3.service';
 
 @Injectable()
 export class PostService {
-  create(createPostDto: CreatePostDto) {
+  constructor(
+    private postRepository: PostRepository,
+    private awsS3Service: AwsS3Service,
+  ) {}
+
+  async create(req: CreatePostDto, files: Array<Express.Multer.File>) {
+    const imageData = await this.awsS3Service.uploadFileToS3(files);
+
     return 'This action adds a new post';
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findAll() {
+    return this.postRepository.findAllPosts();
   }
 
   findOne(id: number) {
