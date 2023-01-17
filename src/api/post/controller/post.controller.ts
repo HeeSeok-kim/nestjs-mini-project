@@ -1,15 +1,35 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  UseInterceptors,
+  UseFilters,
+  UploadedFiles,
+} from '@nestjs/common';
 import { PostService } from '../service/post.service';
 import { CreatePostDto } from '../dto/create-post.dto';
 import { UpdatePostDto } from '../dto/update-post.dto';
+import { GlobalExceptionFilter } from '../../../common/filter/global.exception.filter';
+import { GlobalResponseInterceptor } from '../../../common/interceptors/global.response.interceptor';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller('post')
+@UseInterceptors(GlobalResponseInterceptor)
+@UseFilters(GlobalExceptionFilter)
 export class PostController {
   constructor(private readonly postService: PostService) {}
 
   @Post()
-  create(@Body() createPostDto: CreatePostDto) {
-    return this.postService.create(createPostDto);
+  @UseInterceptors(FilesInterceptor('thumbnail', 5))
+  create(
+    @UploadedFiles() file: Array<Express.Multer.File>,
+    @Body() req: CreatePostDto,
+  ) {
+    return this.postService.create(req, file);
   }
 
   @Get()

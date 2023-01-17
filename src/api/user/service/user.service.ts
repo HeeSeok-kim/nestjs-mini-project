@@ -1,26 +1,40 @@
-import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
+import { UserRepository } from '../../../db/repository/UserRepository';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
-  }
+  constructor(private userRepository: UserRepository) {}
 
-  findAll() {
-    return `This action returns all user`;
-  }
+  async signUp(req: CreateUserDto) {
+    req.password = await bcrypt.hash(
+      req.password,
+      parseInt(process.env.saltOrRounds),
+    );
+    const { login_id, password, nickname } = req;
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
-  }
+    const findId = await this.userRepository.findOne({ login_id: login_id });
+    if (findId) {
+      throw new BadRequestException('중복되는 아이디가 존재합니다.');
+    }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
+    const findNickName = await this.userRepository.findOne({
+      nickName: nickname,
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+    if (findNickName) {
+      throw new BadRequestException('중복되는 닉네임 입니다.');
+    }
+
+    const result = await this.userRepository.signUp({
+      login_id,
+      password,
+      nickname,
+    });
+    if (result) {
+      return `${result.login_id} 회원 가입 되었습니다.`;
+    }
   }
 }
